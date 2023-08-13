@@ -1,17 +1,43 @@
-// create web server
-// import modules
+// create web server with imports included for comment
 const express = require('express');
 const router = express.Router();
-const commentsController = require('../controllers/comments_controller');
+const commentController = require('../controllers/commentController');
+const { check } = require('express-validator');
 
-// handle request
-router.get('/', commentsController.comments_list);
-router.get('/create', commentsController.comments_create_get);
-router.post('/create', commentsController.comments_create_post);
-router.get('/:id/delete', commentsController.comments_delete_get);
-router.post('/:id/delete', commentsController.comments_delete_post);
-router.get('/:id/update', commentsController.comments_update_get);
-router.post('/:id/update', commentsController.comments_update_post);
-router.get('/:id', commentsController.comments_detail);
+// api/comment
+// create a comment
+router.post('/', 
+    [
+        check('comment', 'The comment cannot be empty').not().isEmpty()
+    ],
+    commentController.createComment
+);
 
+// api/comment
+// get all comments
+router.get('/', 
+    commentController.getComments
+);
 
+// api/comment/:id
+// get all comments by id
+router.get('/:id', 
+    commentController.getCommentsById
+);
+
+// api/comment/:id
+// update a comment
+router.put('/:id', 
+    [
+        check('comment', 'The comment cannot be empty').not().isEmpty()
+    ],
+    commentController.updateComment
+);
+
+// api/comment/:id
+// delete a comment
+router.delete('/:id', 
+    commentController.deleteComment
+);
+
+module.exports = router;
